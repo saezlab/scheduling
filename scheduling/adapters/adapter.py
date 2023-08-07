@@ -9,7 +9,7 @@ from biocypher._logger import logger
 logger.debug(f"Loading module {__name__}.")
 
 
-class BioCypherMetaAdapterNodeType(Enum):
+class GitHubAdapterNodeType(Enum):
     """
     Define types of nodes the adapter can provide.
     """
@@ -17,7 +17,7 @@ class BioCypherMetaAdapterNodeType(Enum):
     ISSUE = auto()
 
 
-class BioCypherMetaAdapterIssueField(Enum):
+class GitHubAdapterIssueField(Enum):
     """
     Define possible fields the adapter can provide for proteins.
     """
@@ -27,7 +27,7 @@ class BioCypherMetaAdapterIssueField(Enum):
     BODY = "body"
 
 
-class BioCypherMetaAdapterEdgeType(Enum):
+class GitHubAdapterEdgeType(Enum):
     """
     Enum for the types of the protein adapter.
     """
@@ -35,7 +35,7 @@ class BioCypherMetaAdapterEdgeType(Enum):
     PART_OF = "part_of"
 
 
-class BioCypherMetaAdapter:
+class GitHubAdapter:
     """
     Example BioCypher adapter. Generates nodes and edges for creating a
     knowledge graph.
@@ -520,7 +520,7 @@ class BioCypherMetaAdapter:
         if node_types:
             self.node_types = node_types
         else:
-            self.node_types = [type for type in BioCypherMetaAdapterNodeType]
+            self.node_types = [type for type in GitHubAdapterNodeType]
 
         if node_fields:
             self.node_fields = node_fields
@@ -528,14 +528,14 @@ class BioCypherMetaAdapter:
             self.node_fields = [
                 field
                 for field in chain(
-                    BioCypherMetaAdapterIssueField,
+                    GitHubAdapterIssueField,
                 )
             ]
 
         if edge_types:
             self.edge_types = edge_types
         else:
-            self.edge_types = [type for type in BioCypherMetaAdapterEdgeType]
+            self.edge_types = [type for type in GitHubAdapterEdgeType]
 
         if edge_fields:
             self.edge_fields = edge_fields

@@ -1,9 +1,9 @@
 from biocypher import BioCypher
-from meta_graph.adapters.adapter import (
-    BioCypherMetaAdapter,
-    BioCypherMetaAdapterNodeType,
-    BioCypherMetaAdapterEdgeType,
-    BioCypherMetaAdapterIssueField,
+from scheduling.adapters.adapter import (
+    GitHubAdapter,
+    GitHubAdapterNodeType,
+    GitHubAdapterEdgeType,
+    GitHubAdapterIssueField,
 )
 
 # Instantiate the BioCypher interface
@@ -15,24 +15,24 @@ bc = BioCypher()
 # Choose node types to include in the knowledge graph.
 # These are defined in the adapter (`adapter.py`).
 node_types = [
-    BioCypherMetaAdapterNodeType.ISSUE,
+    GitHubAdapterNodeType.ISSUE,
 ]
 
 # Choose protein adapter fields to include in the knowledge graph.
 # These are defined in the adapter (`adapter.py`).
 node_fields = [
     # Issues
-    BioCypherMetaAdapterIssueField.NUMBER,
-    BioCypherMetaAdapterIssueField.TITLE,
-    BioCypherMetaAdapterIssueField.BODY,
+    GitHubAdapterIssueField.NUMBER,
+    GitHubAdapterIssueField.TITLE,
+    GitHubAdapterIssueField.BODY,
 ]
 
 edge_types = [
-    BioCypherMetaAdapterEdgeType.PART_OF,
+    GitHubAdapterEdgeType.PART_OF,
 ]
 
 # Create a protein adapter instance
-adapter = BioCypherMetaAdapter(
+adapter = GitHubAdapter(
     node_types=node_types,
     node_fields=node_fields,
     edge_types=edge_types,
