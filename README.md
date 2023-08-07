@@ -1,4 +1,7 @@
 # BioCypher meta-graph
+A read-only online version is available at https://meta.biocypher.org/. It is
+built from the `read_only` branch of this repository.
+
 Information about pipelines and adapters available in BioCypher, as described on
 the GitHub Projects board for 
 [Components](https://github.com/orgs/biocypher/projects/3). Uses the GitHub API
