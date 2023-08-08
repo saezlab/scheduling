@@ -39,6 +39,7 @@ jobs:
       run: |
         git config --global user.name "GitHub Actions"
         git config --global user.email "slobentanzer@users.noreply.github.com"
+        git pull origin main
         git add README.md
         git commit -m "Update README.md"
-        git push
+        git push origin main
