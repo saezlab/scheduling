@@ -42,15 +42,15 @@ to the `Closed / Parked` column. The club will then be ignored by the scheduling
 algorithm.
 
 ## Current Schedule
-Last updated: 2023-08-08 23:00:20
-| id              | schedule                                    |
-|-----------------|---------------------------------------------|
-| slobentanzer    | ['Meta 14:00-15:00', 'Methods 15:00-15:30'] |
-| roramirezf      | ['Meta 14:00-15:00', 'Methods 15:00-15:30'] |
-| PauBadiaM       | []                                          |
-| LornaWessels    | []                                          |
-| saezrodriguez   | ['Methods 15:00-15:30']                     |
-| martingarridorc | ['Methods 15:00-15:30']                     |
-| smuellerd       | []                                          |
-| jtanevski       | []                                          |
-| barbarazpc      | []                                          |
+Last updated: 2023-08-08 23:06:20
+| id              | schedule                                                 |
+|-----------------|----------------------------------------------------------|
+| slobentanzer    | ['Meta 14:00-15:00', 'Methods 15:00-15:30']              |
+| roramirezf      | ['Meta 14:00-15:00', 'Methods 15:00-15:30']              |
+| PauBadiaM       | []                                                       |
+| LornaWessels    | []                                                       |
+| saezrodriguez   | ['Methods 15:00-15:30']                                  |
+| martingarridorc | ['Mass Spectrometry 14:00-14:30', 'Methods 15:00-15:30'] |
+| smuellerd       | ['Mass Spectrometry 14:00-14:30']                        |
+| jtanevski       | []                                                       |
+| barbarazpc      | []                                                       |
