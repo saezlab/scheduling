@@ -10,6 +10,9 @@ import pandas as pd
 
 pd.set_option("display.max_columns", None)
 
+# TODO: could inform about conflicts leading to skipped clubs
+# TODO: could add room management
+
 
 def main():
     # Instantiate the BioCypher interface
