@@ -35,9 +35,10 @@ jobs:
         BIOCYPHER_GITHUB_PROJECT_TOKEN: ${{ secrets.BIOCYPHER_GITHUB_PROJECT_TOKEN }}
       run: poetry run python calculate_schedule.py
 
-    run: |
-      git config --global user.name "GitHub Actions"
-      git config --global user.email "slobentanzer@users.noreply.github.com"
-      git add README.md
-      git commit -m "Update README.md"
-      git push
+    - name: Commit Changes and Push
+      run: |
+        git config --global user.name "GitHub Actions"
+        git config --global user.email "slobentanzer@users.noreply.github.com"
+        git add README.md
+        git commit -m "Update README.md"
+        git push
