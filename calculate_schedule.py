@@ -73,7 +73,7 @@ def main():
     clubs = all_clubs[
         (all_clubs["status"] == "To be scheduled")
         | (all_clubs["status"] == "Scheduled")
-    ]
+    ].copy()
     clubs["status"] = "To be scheduled"
 
     # randomize the order of the rows
