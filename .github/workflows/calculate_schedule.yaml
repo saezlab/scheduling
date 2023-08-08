@@ -10,6 +10,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment: scheduling
 
     steps:
     - name: Checkout Repository
@@ -28,11 +29,6 @@ jobs:
 
     - name: Install Dependencies
       run: poetry install
-
-    - name: Set up Secrets
-      run: echo $SECRET_FILE_CONTENT | base64 -d > api_key.env
-      env:
-        BIOCYPHER_GITHUB_PROJECT_TOKEN: ${{ secrets.SECRET_FILE_CONTENT }}
 
     - name: Run Script
       run: poetry run python calculate_schedule.py
