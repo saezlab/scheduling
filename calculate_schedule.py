@@ -59,7 +59,7 @@ def main():
 
     ## Calculate timeslots
 
-    clubs = dfs["club"]
+    all_clubs = dfs["club"]
     timeslots = dfs["timeslot"]
     persons = dfs["person"]
 
@@ -69,10 +69,14 @@ def main():
     persons["schedule"] = [[] for _ in range(len(persons))]
 
     # filter rows only with status "To be scheduled"
-    clubs = clubs[clubs["status"] == "To be scheduled"]
+    clubs = all_clubs[all_clubs["status"] == "To be scheduled"]
 
     # randomize the order of the rows
     clubs = clubs.sample(frac=1).reset_index(drop=True)
+
+    # prepend rows that were skipped last week ("Unscheduled")
+    unscheduled_clubs = all_clubs[all_clubs["status"] == "Unscheduled"]
+    clubs = pd.concat([unscheduled_clubs, clubs], ignore_index=True)
 
     # end time is last timeslot + 15 min
     end_time = datetime.strptime(timeslots["id"].iloc[-2], "%H:%M") + timedelta(

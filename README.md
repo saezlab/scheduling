@@ -24,8 +24,18 @@ the `Unscheduled` column) to next week.
 If the club has been successfully assigned, the corresponding issue is updated
 with the assigned time and moved to the `Scheduled` column.
 
+### Preparing for the next week
+
+After the club meetings, those cards that should be considered for next week's
+schedule should manually be moved back to the `To be scheduled` column. Clubs
+in the `Scheduled` column will be ignored by the scheduling algorithm for the
+next week. (Note: This could also be automated.)
+
+Assignees should also be updated to reflect those that wish to attend the club
+in the following week.
+
 ### Parking Clubs
 
-If a club should not be scheduled for the coming week, the card can be moved to
-the `Closed / Parked` column. The club will then be ignored by the scheduling
+If a club should not be scheduled for the coming week(s), the card can be moved
+to the `Closed / Parked` column. The club will then be ignored by the scheduling
 algorithm.
