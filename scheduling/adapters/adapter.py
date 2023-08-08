@@ -122,8 +122,8 @@ class GitHubAdapter:
     def _get_project_id(self, url: str, headers: dict) -> str:
         query = """
                 query{
-                    organization(login: "biocypher"){
-                        projectV2(number: 3) {
+                    organization(login: "saezlab"){
+                        projectV2(number: 18) {
                             id
                         }
                     }
@@ -229,6 +229,18 @@ class GitHubAdapter:
                               title
                               body
                               number
+                              labels(first: 10) {
+                                edges {
+                                  node {
+                                    name
+                                  }
+                                }
+                              }
+                              assignees(first: 10) {
+                                nodes {
+                                  login
+                                }
+                              }
                             }
                           }
                         }
@@ -303,6 +315,17 @@ class GitHubAdapter:
                                           title
                                           body
                                           number
+                                          labels(first: 10) {
+                                            edges {
+                                              node {
+                                                name
+                                              }
+                                            }
+                                          assignees(first: 10) {
+                                            nodes {
+                                              login
+                                            }
+                                          }
                                         }
                                       }
                                     }
@@ -362,9 +385,9 @@ class GitHubAdapter:
         # Fields
         for field in self._fields:
             if field["name"] not in [
-                "Adapter Input Format",
-                "Resource Type",
-                "Data Type",
+                "Status",
+                "Duration",
+                "Timeslot",
             ]:
                 continue
 
@@ -376,17 +399,37 @@ class GitHubAdapter:
 
         # Individual cards
         for key, value in self._items.items():
+            # add fields to item
             fields = [
                 field
                 for field in value.get("fieldValues", {}).get("nodes", [])
                 if field
             ]
 
-            # add fields to item
             for field in fields:
                 field_type = field["field"]["name"]
                 field_value = field.get("text") or field.get("name")
                 value[field_type] = field_value
+
+            # add labels to item
+            labels = [
+                label["node"]["name"]
+                for label in value.get("content", {})
+                .get("labels", {})
+                .get("edges", [])
+            ]
+
+            value["labels"] = labels
+
+            # add assignees to item
+            assignees = [
+                assignee["login"]
+                for assignee in value.get("content", {})
+                .get("assignees", {})
+                .get("nodes", [])
+            ]
+
+            value["assignees"] = assignees
 
             # add back to _items
             self._items[key] = value
@@ -397,62 +440,44 @@ class GitHubAdapter:
                 logger.warning(f"Item {value['id']} has no title.")
                 continue
 
-            label = self._get_label(fields)
-            url = value.get("Resource URL")
+            label = self._get_label()
+            duration = int(value.get("Duration", 30))
+            status = value.get("Status")
+            timeslot = value.get("Timeslot")
+
             number = "i" + str(value["content"]["number"])
 
-            self._nodes.append((number, label, {"name": title, "url": url}))
+            self._nodes.append(
+                (
+                    number,
+                    label,
+                    {
+                        "title": title,
+                        "duration": duration,
+                        "timeslot": timeslot,
+                        "status": status,
+                        "labels": labels,
+                        "assignees": assignees,
+                    },
+                )
+            )
 
         # Edges to fields
         for key, value in self._items.items():
-            fields = [
-                field
-                for field in value.get("fieldValues", {}).get("nodes", [])
-                if field
-            ]
-
             number = "i" + str(value["content"]["number"])
 
-            for field in fields:
-                if field["field"]["name"] not in [
-                    "Adapter Input Format",
-                    "Resource Type",
-                    "Data Type",
-                ]:
-                    continue
+            for assignee in value.get("assignees", []):
+                if assignee not in self._nodes:
+                    self._nodes.append((assignee, "person", {}))
 
-                self._edges.append(
-                    (None, number, field["name"].lower(), "uses", {})
-                )
+                self._edges.append((None, assignee, number, "attends", {}))
 
-    def _get_label(self, labels):
+    def _get_label(self):
         """
-        Get the label for the node.
+        Get the label for the node. Just returns club for now.
         """
 
-        g = t = ""
-
-        for label in labels:
-            if label["field"]["name"] == "Component Type":
-                t = label["name"]
-
-            if t == "Pipeline":
-                return "pipeline"
-
-            if label["field"]["name"] == "Adapter Granularity":
-                g = label["name"]
-
-        # to list if not empty
-        concat = []
-        if g:
-            concat.append(g.lower())
-        if t:
-            concat.append(t.lower())
-
-        concat.append("adapter")
-
-        # concatenate
-        return " ".join(concat)
+        return "club"
 
     def _process_edges(self):
         """
