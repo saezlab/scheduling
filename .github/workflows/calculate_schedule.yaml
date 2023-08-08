@@ -1,0 +1,33 @@
+name: Tests
+
+on:
+  schedule:
+    - cron: '0 12 * * 1'
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.9'
+
+    - name: Install Poetry
+      run: |
+        curl -sSL https://install.python-poetry.org | python -
+        poetry --version
+        poetry config virtualenvs.create false
+
+    - name: Install Dependencies
+      run: poetry install
+
+    - name: Run Script
+      run: poetry run python3 scripts/calculate_schedule.py
