@@ -31,4 +31,6 @@ jobs:
       run: poetry install
 
     - name: Run Script
+      env:
+        BIOCYPHER_GITHUB_PROJECT_TOKEN: ${{ secrets.BIOCYPHER_GITHUB_PROJECT_TOKEN }}
       run: poetry run python calculate_schedule.py
