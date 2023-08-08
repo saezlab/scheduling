@@ -68,8 +68,13 @@ def main():
     # add column "schedule" to persons, collecting all individual attended clubs
     persons["schedule"] = [[] for _ in range(len(persons))]
 
-    # filter rows only with status "To be scheduled"
-    clubs = all_clubs[all_clubs["status"] == "To be scheduled"]
+    # filter rows only with status "To be scheduled" and "Scheduled", but not
+    # "Unscheduled" or "Closed / Parked"
+    clubs = all_clubs[
+        (all_clubs["status"] == "To be scheduled")
+        | (all_clubs["status"] == "Scheduled")
+    ]
+    clubs["status"] = "To be scheduled"
 
     # randomize the order of the rows
     clubs = clubs.sample(frac=1).reset_index(drop=True)

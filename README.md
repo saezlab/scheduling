@@ -26,13 +26,13 @@ with the assigned time and moved to the `Scheduled` column.
 
 ### Preparing for the next week
 
-After the club meetings, those cards that should be considered for next week's
-schedule should manually be moved back to the `To be scheduled` column. Clubs
-in the `Scheduled` column will be ignored by the scheduling algorithm for the
-next week. (Note: This could also be automated.)
+After the club meetings, cards that were successfully scheduled are
+automatically removed back to the `To be scheduled` column for the next week.
+If a club should not be scheduled for the next week, it can be moved to the
+`Closed / Parked` column.
 
-Assignees should also be updated to reflect those that wish to attend the club
-in the following week.
+Assignees should be updated to reflect those that wish to attend the club in the
+following week.
 
 ### Parking Clubs
 
