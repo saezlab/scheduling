@@ -2,7 +2,12 @@
 
 This repo implements a BioCypher pipeline that grabs all of the repo's issues,
 which are organisational units of individual club meetings, and schedules them
-into the available timeslots.
+into the available timeslots. The clubs to be scheduled are represented by
+issues on a GitHub [project
+board](https://github.com/orgs/saezlab/projects/18/views/1), which can also be
+displayed as a [time
+table](https://github.com/orgs/saezlab/projects/18/views/2). Personal schedules
+for the upcoming meetings can be found at the bottom of this README.
 
 ## Usage
 
