@@ -1,27 +1,31 @@
-# BioCypher meta-graph
-A read-only online version is available at https://meta.biocypher.org/. It is
-built from the `read_only` branch of this repository.
+# Club Scheduling
 
-Information about pipelines and adapters available in BioCypher, as described on
-the GitHub Projects board for 
-[Components](https://github.com/orgs/biocypher/projects/3). Uses the GitHub API
-adapter to populate the graph and mount it on localhost:7474 using the Neo4j
-docker container. To run locally, you will need to have Docker installed and
-running. Then, you can run it using:
+This repo implements a BioCypher pipeline that grabs all of the repo's issues,
+which are organisational units of individual club meetings, and schedules them
+into the available timeslots.
 
-```
-git clone https://github.com/biocypher/meta-graph.git
-cd meta-graph
-docker compose up
-```
+## Usage
 
-After the graph has been built, you can access it in the Neo4j Browser at
-http://localhost:7474. This version of the meta-graph is a read-only instance,
-so you will not be able to make changes to the graph. Authentication is not
-required. To see the entire graph, you can run the following Cypher query:
+The workflow in `.github/workflows/calculate_schedule.yml` is run periodically
+on each Monday evening. It can also be triggered by push. It clones the
+repository, installs the dependencies, and runs the `calculate_schedule.py`
+script, which uses the BioCypher GitHub adapter in
+`scheduling/adapters/adapter.py` to get the data and then computes the schedule
+from the data.
 
-```
-MATCH (n) RETURN n
-```
+### Scheduling
 
-The online version is available at https://meta.biocypher.org/.
+The scheduling algorithm is a simple greedy algorithm that iterates through the
+clubs (i.e., the issues) in *random order* and assigns them to the first
+available timeslot, given that all attendants (i.e. assignees) of the club are
+available at that time. If no such timeslot exists, the club is postponed (to
+the `Unscheduled` column) to next week. 
+
+If the club has been successfully assigned, the corresponding issue is updated
+with the assigned time and moved to the `Scheduled` column.
+
+### Parking Clubs
+
+If a club should not be scheduled for the coming week, the card can be moved to
+the `Closed / Parked` column. The club will then be ignored by the scheduling
+algorithm.
