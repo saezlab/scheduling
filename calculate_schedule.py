@@ -153,6 +153,28 @@ def main():
         # update the github project using the updated clubs dataframe
         adapter.mutate_column(row["id"], row["status"])
         adapter.mutate_timeslot(row["id"], row["timeslot"])
+        adapter.mutate_duration(row["id"], str(row["duration"]))
+
+    # append the persons table in markdown format to the README.md, replacing
+    # the previous table
+    persons_md = persons[["id", "schedule"]].to_markdown(
+        index=False, tablefmt="github"
+    )
+    with open("README.md", "r") as f:
+        lines = f.readlines()
+        for i, line in enumerate(lines):
+            if line.startswith("## Current Schedule"):
+                lines[
+                    i + 1
+                ] = f"Last updated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n"
+                # delete all lines after i+1
+                lines = lines[: i + 2]
+                # append the persons table
+                lines.append(persons_md)
+                break
+
+    with open("README.md", "w") as f:
+        f.writelines(lines)
 
 
 if __name__ == "__main__":

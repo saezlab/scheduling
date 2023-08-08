@@ -22,7 +22,8 @@ available at that time. If no such timeslot exists, the club is postponed (to
 the `Unscheduled` column) to next week. 
 
 If the club has been successfully assigned, the corresponding issue is updated
-with the assigned time and moved to the `Scheduled` column.
+with the assigned time and moved to the `Scheduled` column. The schedules of
+each person are also appended to the bottom of the README file.
 
 ### Preparing for the next week
 
@@ -39,3 +40,17 @@ following week.
 If a club should not be scheduled for the coming week(s), the card can be moved
 to the `Closed / Parked` column. The club will then be ignored by the scheduling
 algorithm.
+
+## Current Schedule
+Last updated: 2023-08-09 00:51:06
+| id              | schedule                                                       |
+|-----------------|----------------------------------------------------------------|
+| slobentanzer    | ['GRNs 14:00-14:15', 'Methods 14:45-15:15']                    |
+| roramirezf      | ['Spatial Transcriptomics 14:00-14:45', 'Methods 14:45-15:15'] |
+| PauBadiaM       | ['GRNs 14:00-14:15']                                           |
+| LornaWessels    | ['GRNs 14:00-14:15']                                           |
+| saezrodriguez   | ['Methods 14:45-15:15']                                        |
+| martingarridorc | ['Mass Spectrometry 14:00-14:30', 'Methods 14:45-15:15']       |
+| smuellerd       | ['Mass Spectrometry 14:00-14:30']                              |
+| jtanevski       | ['Spatial Transcriptomics 14:00-14:45']                        |
+| barbarazpc      | ['Spatial Transcriptomics 14:00-14:45']                        |

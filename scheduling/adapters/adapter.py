@@ -197,6 +197,44 @@ class GitHubAdapter:
         # Extract the data from the response JSON
         data = response_json.get("data")
 
+    def mutate_duration(self, item_id: str, new_duration: str):
+        """
+        Update the duration of an event (card).
+        """
+
+        # find the id of the status field and the column
+        for field in self._fields:
+            if field.get("name") == "Duration":
+                field_id = field.get("id")
+                for option in field.get("options"):
+                    if option.get("name") == new_duration:
+                        field_value = option.get("id")
+
+        query = """
+          mutation {
+            updateProjectV2ItemFieldValue (input: {fieldId: "%s", itemId: "%s", projectId: "%s", value: {singleSelectOptionId: "%s"} }) {
+              clientMutationId
+            }
+          }
+        """ % (
+            field_id,
+            item_id,
+            self._id,
+            field_value,
+        )
+
+        # Set the request data as a dictionary
+        data = {"query": query}
+
+        # Send the API request
+        response = requests.post(self.url, headers=self.headers, json=data)
+
+        # Parse the response JSON
+        response_json = json.loads(response.text)
+
+        # Extract the data from the response JSON
+        data = response_json.get("data")
+
     def _get_project_id(self, url: str, headers: dict) -> str:
         query = """
                 query{
