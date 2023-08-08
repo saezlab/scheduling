@@ -61,6 +61,7 @@ class GitHubAdapter:
         self._nodes = []
         self._edges = []
 
+        self._setup_api()
         self._download_data()
         self._process_nodes()
         self._process_edges()
@@ -95,25 +96,106 @@ class GitHubAdapter:
 
         return token
 
+    def _setup_api(self):
+        """
+        Set up the GitHub API.
+        """
+
+        # Set the API endpoint and headers
+        self.url = "https://api.github.com/graphql"
+        self.headers = {"Authorization": f"Bearer {self._get_token()}"}
+
     def _download_data(self):
         """
         Download data from the GitHub project page using the API.
         """
 
-        token = self._get_token()
-
-        # Set the API endpoint and headers
-        url = "https://api.github.com/graphql"
-        headers = {"Authorization": f"Bearer {token}"}
-
         # Get the project ID
-        id_ = self._get_project_id(url, headers)
+        self._id = self._get_project_id(self.url, self.headers)
 
         # Get the project fields
-        self._fields = self._get_project_fields(url, headers, id_)
+        self._fields = self._get_project_fields(
+            self.url, self.headers, self._id
+        )
 
         # Get the project items
-        self._items = self._get_project_items(url, headers, id_)
+        self._items = self._get_project_items(self.url, self.headers, self._id)
+
+    def mutate_column(self, item_id: str, new_column: str):
+        """
+        Move a card to a new column.
+        """
+
+        # find the id of the status field and the column
+        for field in self._fields:
+            if field.get("name") == "Status":
+                field_id = field.get("id")
+                for option in field.get("options"):
+                    if option.get("name") == new_column:
+                        field_value = option.get("id")
+
+        query = """
+          mutation {
+            updateProjectV2ItemFieldValue (input: {fieldId: "%s", itemId: "%s", projectId: "%s", value: {singleSelectOptionId: "%s"} }) {
+              clientMutationId
+            }
+          }
+        """ % (
+            field_id,
+            item_id,
+            self._id,
+            field_value,
+        )
+
+        # Set the request data as a dictionary
+        data = {"query": query}
+
+        # Send the API request
+        response = requests.post(self.url, headers=self.headers, json=data)
+
+        # Parse the response JSON
+        response_json = json.loads(response.text)
+
+        # Extract the data from the response JSON
+        data = response_json.get("data")
+
+    def mutate_timeslot(self, item_id: str, new_timeslot: str):
+        """
+        Update the timeslot value of a card.
+        """
+
+        # find the id of the status field and the column
+        for field in self._fields:
+            if field.get("name") == "Timeslot":
+                field_id = field.get("id")
+                for option in field.get("options"):
+                    if option.get("name") == new_timeslot:
+                        field_value = option.get("id")
+
+        query = """
+          mutation {
+            updateProjectV2ItemFieldValue (input: {fieldId: "%s", itemId: "%s", projectId: "%s", value: {singleSelectOptionId: "%s"} }) {
+              clientMutationId
+            }
+          }
+        """ % (
+            field_id,
+            item_id,
+            self._id,
+            field_value,
+        )
+
+        # Set the request data as a dictionary
+        data = {"query": query}
+
+        # Send the API request
+        response = requests.post(self.url, headers=self.headers, json=data)
+
+        # Parse the response JSON
+        response_json = json.loads(response.text)
+
+        # Extract the data from the response JSON
+        data = response_json.get("data")
 
     def _get_project_id(self, url: str, headers: dict) -> str:
         query = """
@@ -365,7 +447,7 @@ class GitHubAdapter:
             if not node["content"].get("number"):
                 continue
 
-            issue_number = f'i{node["content"]["number"]}'
+            issue_number = node["content"]["number"]
             node_dict[issue_number] = node
 
         return node_dict
@@ -441,11 +523,9 @@ class GitHubAdapter:
             status = value.get("Status")
             timeslot = value.get("Timeslot")
 
-            number = "i" + str(value["content"]["number"])
-
             self._nodes.append(
                 (
-                    number,
+                    value["id"],
                     label,
                     {
                         "title": title,
@@ -454,19 +534,18 @@ class GitHubAdapter:
                         "status": status,
                         "labels": labels,
                         "assignees": assignees,
+                        "issue": key,
                     },
                 )
             )
 
         # Edges to fields
         for key, value in self._items.items():
-            number = "i" + str(value["content"]["number"])
-
             for assignee in value.get("assignees", []):
                 if assignee not in self._nodes:
                     self._nodes.append((assignee, "person", {}))
 
-                self._edges.append((None, assignee, number, "attends", {}))
+                self._edges.append((None, assignee, value["id"], "attends", {}))
 
     def _get_label(self):
         """

@@ -8,6 +8,8 @@ from scheduling.adapters.adapter import (
 from datetime import datetime, timedelta
 import pandas as pd
 
+pd.set_option("display.max_columns", None)
+
 
 def main():
     # Instantiate the BioCypher interface
@@ -73,7 +75,7 @@ def main():
     clubs = clubs.sample(frac=1).reset_index(drop=True)
 
     # end time is last timeslot + 15 min
-    end_time = datetime.strptime(timeslots["id"].iloc[-1], "%H:%M") + timedelta(
+    end_time = datetime.strptime(timeslots["id"].iloc[-2], "%H:%M") + timedelta(
         minutes=15
     )
 
@@ -103,7 +105,9 @@ def main():
             row["status"] = "Unscheduled"
             clubs.loc[index] = row
             print(f"{row['title']}: ----- Skipped -----")
-            print(clubs)
+            print(clubs.head())
+            adapter.mutate_column(row["id"], row["status"])
+            adapter.mutate_timeslot(row["id"], "Skipped")
             continue
 
         # if not skipped, assign the timeslot of the latest busy_until
@@ -134,11 +138,12 @@ def main():
         clubs.loc[index] = row
 
         print(f"{row['title']}: ----- Scheduled -----")
-        print(clubs)
-        print(persons)
+        print(clubs[["title", "duration", "timeslot", "status"]])
+        print(persons[["id", "busy_until", "schedule"]])
 
         # update the github project using the updated clubs dataframe
-        # TODO
+        adapter.mutate_column(row["id"], row["status"])
+        adapter.mutate_timeslot(row["id"], row["timeslot"])
 
 
 if __name__ == "__main__":
