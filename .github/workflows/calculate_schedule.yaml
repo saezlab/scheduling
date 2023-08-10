@@ -2,7 +2,8 @@ name: Update Schedule
 
 on:
   schedule:
-    - cron: '0 12 * * 1'
+    # Don't run this yet
+    - cron: '0 0 * * *'
   push:
     branches:
       - main
