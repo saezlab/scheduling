@@ -11,7 +11,7 @@ for the upcoming meetings can be found at the bottom of this README.
 
 ## Usage
 
-The workflow in `.github/workflows/calculate_schedule.yml` is run periodically
+The workflow in `.github/workflows/calculate_schedule.yaml` is run periodically
 on each Monday evening. It can also be triggered by push. It clones the
 repository, installs the dependencies, and runs the `calculate_schedule.py`
 script, which uses the BioCypher GitHub adapter in
