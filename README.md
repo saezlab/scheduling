@@ -58,4 +58,4 @@ Last updated: 2023-08-11 00:51:41
 | martingarridorc | ['Mass Spectrometry 14:00-14:30', 'Methods 15:00-15:30'] |
 | smuellerd       | ['Mass Spectrometry 14:00-14:30']                        |
 | jtanevski       | []                                                       |
-| barbarazpc      | []                                                       |
+| barbarazpc      | []                                                       
