@@ -4,9 +4,6 @@ on:
   schedule:
     # Don't run this yet
     - cron: '0 0 * * *'
-  push:
-    branches:
-      - main
 
 jobs:
   build:

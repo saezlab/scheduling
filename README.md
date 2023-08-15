@@ -12,11 +12,13 @@ for the upcoming meetings can be found at the bottom of this README.
 ## Usage
 
 The workflow in `.github/workflows/calculate_schedule.yaml` is run periodically
-on each Monday evening. It can also be triggered by push. It clones the
-repository, installs the dependencies, and runs the `calculate_schedule.py`
-script, which uses the BioCypher GitHub adapter in
-`scheduling/adapters/adapter.py` to get the data and then computes the schedule
-from the data.
+on each Monday evening. It clones the repository, installs the dependencies, and
+runs the `calculate_schedule.py` script, which uses the BioCypher GitHub adapter
+in `scheduling/adapters/adapter.py` to get the data and then computes the
+schedule from the data.
+
+The pipeline can also be run locally and subsequently updated online by pushing
+the results to the repository. 
 
 ### Scheduling
 
