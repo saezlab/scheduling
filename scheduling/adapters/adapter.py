@@ -54,9 +54,7 @@ class GitHubAdapter:
         edge_types: str = None,
         edge_fields: str = None,
     ):
-        self._set_types_and_fields(
-            node_types, node_fields, edge_types, edge_fields
-        )
+        self._set_types_and_fields(node_types, node_fields, edge_types, edge_fields)
 
         self._nodes = []
         self._edges = []
@@ -114,9 +112,7 @@ class GitHubAdapter:
         self._id = self._get_project_id(self.url, self.headers)
 
         # Get the project fields
-        self._fields = self._get_project_fields(
-            self.url, self.headers, self._id
-        )
+        self._fields = self._get_project_fields(self.url, self.headers, self._id)
 
         # Get the project items
         self._items = self._get_project_items(self.url, self.headers, self._id)
@@ -164,6 +160,8 @@ class GitHubAdapter:
         Update the timeslot value of a card.
         """
 
+        field_value = None
+
         # find the id of the status field and the column
         for field in self._fields:
             if field.get("name") == "Timeslot":
@@ -171,6 +169,10 @@ class GitHubAdapter:
                 for option in field.get("options"):
                     if option.get("name") == new_timeslot:
                         field_value = option.get("id")
+
+        if not field_value:
+            logger.warning(f"Could not find {new_timeslot} in field options.")
+            return
 
         query = """
           mutation {
@@ -381,14 +383,10 @@ class GitHubAdapter:
         # Parse the response JSON
         response_json = json.loads(response.text)
 
-        nodes.extend(
-            response_json.get("data").get("node").get("items").get("nodes")
-        )
+        nodes.extend(response_json.get("data").get("node").get("items").get("nodes"))
 
         # Extract the data from the response JSON
-        pageInfo = (
-            response_json.get("data").get("node").get("items").get("pageInfo")
-        )
+        pageInfo = response_json.get("data").get("node").get("items").get("pageInfo")
 
         while pageInfo.get("hasNextPage"):
             next_query = """
@@ -473,10 +471,7 @@ class GitHubAdapter:
 
             # Extract the data from the response JSON
             pageInfo = (
-                response_json.get("data")
-                .get("node")
-                .get("items")
-                .get("pageInfo")
+                response_json.get("data").get("node").get("items").get("pageInfo")
             )
 
         node_dict = {}
@@ -530,9 +525,7 @@ class GitHubAdapter:
             # add labels to item
             labels = [
                 label["node"]["name"]
-                for label in value.get("content", {})
-                .get("labels", {})
-                .get("edges", [])
+                for label in value.get("content", {}).get("labels", {}).get("edges", [])
             ]
 
             value["labels"] = labels
@@ -624,9 +617,7 @@ class GitHubAdapter:
                     if not data_type:
                         continue
 
-                    self._edges.append(
-                        (None, parent, data_type.lower(), "uses", {})
-                    )
+                    self._edges.append((None, parent, data_type.lower(), "uses", {}))
 
     def _extract_uses(self, body) -> list:
         """
@@ -652,9 +643,7 @@ class GitHubAdapter:
         """
         return len(self.get_nodes())
 
-    def _set_types_and_fields(
-        self, node_types, node_fields, edge_types, edge_fields
-    ):
+    def _set_types_and_fields(self, node_types, node_fields, edge_types, edge_fields):
         if node_types:
             self.node_types = node_types
         else:

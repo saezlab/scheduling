@@ -7,6 +7,8 @@ from scheduling.adapters.adapter import (
 )
 from datetime import datetime, timedelta
 import pandas as pd
+import numpy as np
+from numpy.lib.stride_tricks import sliding_window_view as swv
 
 pd.set_option("display.max_columns", None)
 
@@ -63,11 +65,22 @@ def main():
     ## Calculate timeslots
 
     all_clubs = dfs["club"]
-    timeslots = dfs["timeslot"]
     persons = dfs["person"]
+    timeslots = dfs["timeslot"]
+    # remove skipped row
+    timeslots = timeslots[timeslots["id"] != "skipped"]
 
-    # add column "busy_until" to persons, default is first timeslot
-    persons["busy_until"] = timeslots["id"].iloc[0]
+    # add column "is_free" to persons, as a vector of booleans representing
+    # whether the person is free at the timeslot (as many as there are rows in
+    # timeslots)
+    persons["is_free"] = [
+        [True for _ in range(len(timeslots))] for _ in range(len(persons))
+    ]
+    # custom is_free for slobentanzer (could be automated later): set first four
+    # timeslots to False (of the entire vector)
+    persons.loc[persons["id"] == "slobentanzer", "is_free"].iloc[0][:4] = [
+        False for _ in range(4)
+    ]
     # add column "schedule" to persons, collecting all individual attended clubs
     persons["schedule"] = [[] for _ in range(len(persons))]
 
@@ -86,10 +99,8 @@ def main():
     unscheduled_clubs = all_clubs[all_clubs["status"] == "Unscheduled"]
     clubs = pd.concat([unscheduled_clubs, clubs], ignore_index=True)
 
-    # end time is last timeslot + 15 min
-    end_time = datetime.strptime(timeslots["id"].iloc[-2], "%H:%M") + timedelta(
-        minutes=15
-    )
+    # define start and end times for the lunch break
+    lunch_start = datetime.strptime("12:00", "%H:%M")
 
     # row-wise through clubs
     for index, row in clubs.iterrows():
@@ -97,22 +108,42 @@ def main():
         if row["status"] == "Scheduled":
             continue
 
-        # assign earliest timeslot available
+        # assign earliest timeslot available, if it does not run into the lunch
+        # break
         duration = row["duration"]
         assignees = row["assignees"]
-        # for each person in assignees get the busy_until
-        busy_untils = []
-        for assignee in assignees:
-            busy_until = datetime.strptime(
-                persons[persons["id"] == assignee]["busy_until"].iloc[0],
-                "%H:%M",
-            )
-            busy_untils.append(busy_until)
-        # get the latest busy_until as datetime
-        latest_busy_until = max(busy_untils)
 
-        # if the latest busy_until + duration is after end_time, skip
-        if latest_busy_until + timedelta(minutes=duration) > end_time:
+        # add saezrodriguez if not already in assignees
+        if "saezrodriguez" not in assignees:
+            assignees.append("saezrodriguez")
+
+        # calculate the number of consecutive timeslots needed
+        num_timeslots = int(duration / 15)
+
+        # find a window num_timeslots consecutive True values in all rows
+
+        # 2d array of "is_free" values, with rows corresponding to assignees
+        # and columns corresponding to timeslots
+        is_free_array = np.array(
+            [
+                persons[persons["id"] == assignee]["is_free"].iloc[0]
+                for assignee in assignees
+            ]
+        )
+
+        # sliding window view of the array, with window size assignees times
+        # number of timeslots
+        free_timeslots = swv(is_free_array, (len(assignees), num_timeslots))
+
+        # aggregate each timeslot window into a single boolean value
+        free_timeslots = [check.all() for check in free_timeslots[0]]
+
+        # fill vector with False values to account for the ultimate timeslots
+        # that do not have enough values to form a window of num_timeslots
+        free_timeslots += [False for _ in range(num_timeslots - 1)]
+
+        # if there is no block of True values of length num_timeslots, skip
+        if not np.any(free_timeslots):
             # update status
             row["status"] = "Unscheduled"
             clubs.loc[index] = row
@@ -122,23 +153,34 @@ def main():
             adapter.mutate_timeslot(row["id"], "Skipped")
             continue
 
-        # if not skipped, assign the timeslot of the latest busy_until
-        row["timeslot"] = datetime.strftime(latest_busy_until, "%H:%M")
+        # get earliest timeslot from the index of the first True value
+        earliest_timeslot = timeslots[free_timeslots].iloc[0]["id"]
+
+        # if not skipped, assign the timeslot to the club
+        club_name = row["title"]
+        row["timeslot"] = earliest_timeslot
+        end_timeslot = (
+            datetime.strptime(earliest_timeslot, "%H:%M")
+            + timedelta(minutes=15 * (num_timeslots - 1))
+        ).strftime("%H:%M")
         for assignee in assignees:
-            # update the busy_until of the assignees
-            persons.loc[
-                persons["id"] == assignee, "busy_until"
-            ] = datetime.strftime(
-                latest_busy_until + timedelta(minutes=duration), "%H:%M"
-            )
+            # set is_free to False for the timeslots of the event, keeping the
+            # rest of the vector
+            persons.loc[persons["id"] == assignee, "is_free"].iloc[0][
+                timeslots[timeslots["id"] == earliest_timeslot]
+                .index[0] : timeslots[timeslots["id"] == end_timeslot]
+                .index[0]
+                + 1
+            ] = [False for _ in range(num_timeslots)]
+
             # update the schedule of the assignees
-            club_name = row["title"]
             timespan = (
-                datetime.strftime(latest_busy_until, "%H:%M")
-                + "-"
-                + datetime.strftime(
-                    latest_busy_until + timedelta(minutes=duration), "%H:%M"
-                )
+                earliest_timeslot
+                + " - "
+                + (
+                    datetime.strptime(earliest_timeslot, "%H:%M")
+                    + timedelta(minutes=15 * num_timeslots)
+                ).strftime("%H:%M")
             )
             persons.loc[persons["id"] == assignee, "schedule"].iloc[0].append(
                 club_name + " " + timespan
@@ -151,7 +193,7 @@ def main():
 
         print(f"{row['title']}: ----- Scheduled -----")
         print(clubs[["title", "duration", "timeslot", "status"]])
-        print(persons[["id", "busy_until", "schedule"]])
+        print(persons[["id", "is_free", "schedule"]])
 
         # update the github project using the updated clubs dataframe
         adapter.mutate_column(row["id"], row["status"])
@@ -160,9 +202,7 @@ def main():
 
     # append the persons table in markdown format to the README.md, replacing
     # the previous table
-    persons_md = persons[["id", "schedule"]].to_markdown(
-        index=False, tablefmt="github"
-    )
+    persons_md = persons[["id", "schedule"]].to_markdown(index=False, tablefmt="github")
     with open("README.md", "r") as f:
         lines = f.readlines()
         for i, line in enumerate(lines):
