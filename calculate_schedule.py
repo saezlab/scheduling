@@ -12,26 +12,17 @@ from numpy.lib.stride_tricks import sliding_window_view as swv
 
 pd.set_option("display.max_columns", None)
 
-# TODO: could inform about conflicts leading to skipped clubs
 # TODO: could add room management
 
 
 def main():
-    # Instantiate the BioCypher interface
-    # You can use `config/biocypher_config.yaml` to configure the framework or
-    # supply settings via parameters below
     bc = BioCypher()
 
-    # Choose node types to include in the knowledge graph.
-    # These are defined in the adapter (`adapter.py`).
     node_types = [
         GitHubAdapterNodeType.ISSUE,
     ]
 
-    # Choose protein adapter fields to include in the knowledge graph.
-    # These are defined in the adapter (`adapter.py`).
     node_fields = [
-        # Issues
         GitHubAdapterIssueField.NUMBER,
         GitHubAdapterIssueField.TITLE,
         GitHubAdapterIssueField.BODY,
@@ -41,15 +32,12 @@ def main():
         GitHubAdapterEdgeType.PART_OF,
     ]
 
-    # Create a protein adapter instance
     adapter = GitHubAdapter(
         node_types=node_types,
         node_fields=node_fields,
         edge_types=edge_types,
-        # we can leave edge fields empty, defaulting to all fields in the adapter
     )
 
-    # Create a knowledge graph from the adapter
     bc.add_nodes(adapter.get_nodes())
     bc.add_edges(adapter.get_edges())
 
@@ -58,9 +46,6 @@ def main():
     for name, df in dfs.items():
         print(name)
         print(df.head())
-
-    # Summary
-    # bc.summary()
 
     ## Calculate timeslots
 
