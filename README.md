@@ -49,27 +49,27 @@ to the `Closed / Parked` column. The club will then be ignored by the scheduling
 algorithm.
 
 ## Current Schedule
-Last updated: 2023-08-21 21:34:01
+Last updated: 2023-08-22 00:53:11
 | id                | schedule                                                                                                                                                                   |
 |-------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| saezrodriguez     | ['Prior knowledge and AI 14:00 - 14:30', 'KPNNs 14:30 - 15:00', 'Footprints on popular/large data repositories 11:00 - 11:30', 'Meta 15:00 - 16:00', 'GRNs 16:00 - 16:30'] |
-| slobentanzer      | ['Prior knowledge and AI 14:00 - 14:30', 'KPNNs 14:30 - 15:00', 'Meta 15:00 - 16:00', 'GRNs 16:00 - 16:30']                                                                |
-| roramirezf        | ['Meta 15:00 - 16:00']                                                                                                                                                     |
+| saezrodriguez     | ['GRNs 14:00 - 14:30', 'KPNNs 14:30 - 15:00', 'Prior knowledge and AI 15:00 - 15:30', 'Meta 15:30 - 16:30', 'Footprints on popular/large data repositories 11:00 - 11:30'] |
+| slobentanzer      | ['GRNs 14:00 - 14:30', 'KPNNs 14:30 - 15:00', 'Prior knowledge and AI 15:00 - 15:30', 'Meta 15:30 - 16:30']                                                                |
+| roramirezf        | ['Meta 15:30 - 16:30']                                                                                                                                                     |
 | martingarridorc   | []                                                                                                                                                                         |
 | smuellerd         | []                                                                                                                                                                         |
 | jtanevski         | []                                                                                                                                                                         |
-| loicchadoutaud    | ['Prior knowledge and AI 14:00 - 14:30']                                                                                                                                   |
-| barbarazpc        | ['GRNs 16:00 - 16:30']                                                                                                                                                     |
-| ivanovaos         | ['Prior knowledge and AI 14:00 - 14:30', 'KPNNs 14:30 - 15:00', 'Footprints on popular/large data repositories 11:00 - 11:30', 'GRNs 16:00 - 16:30']                       |
-| demian1           | ['Meta 15:00 - 16:00', 'GRNs 16:00 - 16:30']                                                                                                                               |
-| miguel13hh        | ['GRNs 16:00 - 16:30']                                                                                                                                                     |
-| PauBadiaM         | ['GRNs 16:00 - 16:30']                                                                                                                                                     |
-| schae211          | ['KPNNs 14:30 - 15:00', 'Meta 15:00 - 16:00', 'GRNs 16:00 - 16:30']                                                                                                        |
-| LornaWessels      | ['GRNs 16:00 - 16:30']                                                                                                                                                     |
-| pablormier        | ['Prior knowledge and AI 14:00 - 14:30', 'KPNNs 14:30 - 15:00']                                                                                                            |
-| adugourd          | ['Prior knowledge and AI 14:00 - 14:30', 'KPNNs 14:30 - 15:00', 'Footprints on popular/large data repositories 11:00 - 11:30']                                             |
+| loicchadoutaud    | ['Prior knowledge and AI 15:00 - 15:30']                                                                                                                                   |
+| barbarazpc        | ['GRNs 14:00 - 14:30']                                                                                                                                                     |
+| ivanovaos         | ['GRNs 14:00 - 14:30', 'KPNNs 14:30 - 15:00', 'Prior knowledge and AI 15:00 - 15:30', 'Footprints on popular/large data repositories 11:00 - 11:30']                       |
+| demian1           | ['GRNs 14:00 - 14:30', 'Meta 15:30 - 16:30']                                                                                                                               |
+| miguel13hh        | ['GRNs 14:00 - 14:30']                                                                                                                                                     |
+| PauBadiaM         | ['GRNs 14:00 - 14:30']                                                                                                                                                     |
+| schae211          | ['GRNs 14:00 - 14:30', 'KPNNs 14:30 - 15:00', 'Meta 15:30 - 16:30']                                                                                                        |
+| LornaWessels      | ['GRNs 14:00 - 14:30']                                                                                                                                                     |
+| pablormier        | ['KPNNs 14:30 - 15:00', 'Prior knowledge and AI 15:00 - 15:30']                                                                                                            |
+| adugourd          | ['KPNNs 14:30 - 15:00', 'Prior knowledge and AI 15:00 - 15:30', 'Footprints on popular/large data repositories 11:00 - 11:30']                                             |
 | tdrose            | ['KPNNs 14:30 - 15:00']                                                                                                                                                    |
-| koalive           | ['Prior knowledge and AI 14:00 - 14:30']                                                                                                                                   |
-| JanLanzer         | ['Meta 15:00 - 16:00']                                                                                                                                                     |
-| LeonieKuechenhoff | ['Meta 15:00 - 16:00']                                                                                                                                                     |
-| MCHeinz           | ['Meta 15:00 - 16:00']                                                                                                                                                     |
+| koalive           | ['Prior knowledge and AI 15:00 - 15:30']                                                                                                                                   |
+| JanLanzer         | ['Meta 15:30 - 16:30']                                                                                                                                                     |
+| LeonieKuechenhoff | ['Meta 15:30 - 16:30']                                                                                                                                                     |
+| MCHeinz           | ['Meta 15:30 - 16:30']                                                                                                                                                     |
