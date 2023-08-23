@@ -2,8 +2,8 @@ name: Update Schedule
 
 on:
   schedule:
-    # Don't run this yet
-    - cron: '0 0 * * *'
+    # run tuesday at noon each week
+    - cron: '0 12 * * 2'
 
 jobs:
   build:
