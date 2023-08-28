@@ -1,3 +1,6 @@
+# Every Tueday at noon, calculate the schedule for the next week and update the
+# GitHub project accordingly.
+
 from biocypher import BioCypher
 from scheduling.adapters.adapter import (
     GitHubAdapter,
@@ -11,8 +14,6 @@ import numpy as np
 from numpy.lib.stride_tricks import sliding_window_view as swv
 
 pd.set_option("display.max_columns", None)
-
-# TODO: could add room management
 
 
 def main():
