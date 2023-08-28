@@ -47,6 +47,21 @@ def main():
     for _id in scheduled_clubs["id"]:
         adapter.mutate_column(_id, "Closed / Parked")
 
+    # Remove this week's schedule from README.md
+    with open("README.md", "r") as f:
+        lines = f.readlines()
+        for i, line in enumerate(lines):
+            if line.startswith("## Current Schedule"):
+                lines[
+                    i + 1
+                ] = "Next week's schedule will be posted on Tuesday at noon.\n"
+                # delete all lines after i+1
+                lines = lines[: i + 2]
+                break
+
+    with open("README.md", "w") as f:
+        f.writelines(lines)
+
 
 if __name__ == "__main__":
     main()
