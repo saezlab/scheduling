@@ -49,4 +49,29 @@ to the `Closed / Parked` column. The club will then be ignored by the scheduling
 algorithm.
 
 ## Current Schedule
-Next week's schedule will be posted on Tuesday at noon.
+Last updated: 2023-08-29 12:23:01
+| id                | schedule   |
+|-------------------|------------|
+| saezrodriguez     | []         |
+| slobentanzer      | []         |
+| roramirezf        | []         |
+| martingarridorc   | []         |
+| smuellerd         | []         |
+| jtanevski         | []         |
+| loicchadoutaud    | []         |
+| arezourahimi      | []         |
+| barbarazpc        | []         |
+| demian1           | []         |
+| JanLanzer         | []         |
+| schae211          | []         |
+| LeonieKuechenhoff | []         |
+| MCHeinz           | []         |
+| pablormier        | []         |
+| ivanovaos         | []         |
+| adugourd          | []         |
+| tdrose            | []         |
+| koalive           | []         |
+| miguel13hh        | []         |
+| PauBadiaM         | []         |
+| r-trimbour        | []         |
+| LornaWessels      | []         |
