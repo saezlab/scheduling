@@ -49,7 +49,7 @@ to the `Closed / Parked` column. The club will then be ignored by the scheduling
 algorithm.
 
 ## Current Schedule
-Last updated: 2023-10-03 12:24:20
+Last updated: 2023-10-10 12:23:45
 | id                | schedule   |
 |-------------------|------------|
 | saezrodriguez     | []         |
